@@ -1,6 +1,5 @@
 package com.worldofwaffle
 
-import android.util.Log
 import androidx.databinding.ObservableInt
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.OnLifecycleEvent

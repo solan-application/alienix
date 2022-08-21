@@ -37,6 +37,10 @@ private val eventBus: UnboundViewEventBus)
 
     fun getAdapter(): DashboardFragmentPagerAdapter = adapter
 
+    fun onCancelOrder() {
+        orderDetailRoomDatabase.orderDetailDataModelDao().deleteAllOrderDetail()
+    }
+
     fun onNext() {
         val userOrderId = UUID.randomUUID().toString()
         orderDetailRoomDatabase.orderDetailDataModelDao().updateUserOrderId(userOrderId)
@@ -44,5 +48,6 @@ private val eventBus: UnboundViewEventBus)
         orderDetailRoomDatabase.orderDetailDataModelDao().deleteAllOrderDetail()
         transientDataProvider.save(OrderDetailUseCase(orderDetailList))
         eventBus.send(StartActivityEvent.build(this).activityName(OrdersStateActivity::class.java))
+        onPageChange(1)
     }
 }

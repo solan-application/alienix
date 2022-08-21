@@ -16,13 +16,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/take_away_status"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:visibility="@{viewModel.hasTakeAway ? View.VISIBLE : View.GONE}"
+            android:background="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/order_state_waffle_name"
+            tools:visibility="visible"/>
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/order_state_waffle_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{viewModel.waffleName}"
             tools:text="White Choco"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="5dp"
+            app:layout_constraintStart_toEndOf="@+id/take_away_status"
             app:layout_constraintTop_toTopOf="parent"
             />
 
@@ -31,7 +44,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{viewModel.addOns}"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="5dp"
+            app:layout_constraintStart_toEndOf="@+id/take_away_status"
             app:layout_constraintTop_toBottomOf="@+id/order_state_waffle_name"
             android:layout_marginTop="10dp"
             tools:text="Add on"

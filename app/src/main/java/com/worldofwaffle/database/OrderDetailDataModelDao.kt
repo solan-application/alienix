@@ -30,4 +30,7 @@ interface OrderDetailDataModelDao {
 
     @Query("UPDATE ORDER_DETAIL_TABLE SET userOrderId=:userOrderId")
     fun updateUserOrderId(userOrderId: String)
+
+    @Query("UPDATE ORDER_DETAIL_TABLE SET hasTakeAway=:hasTakeAway WHERE waffleId = :waffleId AND orderId = :orderId ")
+    fun updateTakeAwayStatue(hasTakeAway: Int, waffleId: String, orderId: String)
 }

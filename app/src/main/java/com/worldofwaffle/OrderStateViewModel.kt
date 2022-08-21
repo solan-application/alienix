@@ -25,18 +25,21 @@ class OrderStateViewModel @Inject constructor(
             val orderDetailList = transientDataProvider.remove(OrderDetailUseCase::class.java).orderDetailEntityList
             var userOrderId = ""
             var totalItemTotalPrice = 0
+            var hasTakeAway = 0
             val orderedHistoryDetail = orderDetailList.map {
                 userOrderId = userOrderId.plus("UserID: ").plus(it.userOrderId.takeLast(8))
                 var itemTotalPrice  = 0
                 val waffleDetail = menuDatabase.waffleMenuDao().getWaffleDetail(it.waffleId)
                 itemTotalPrice += waffleDetail.wafflePrice
+                hasTakeAway = if (it.hasTakeAway == 1) { 5 }else{ 0 }
                 val addOnNames = it.addedOnItemDetails.joinToString(comma) {
                         addOnItem ->
                     itemTotalPrice += addOnItem.addOnPrice
                     addOnItem.addOnName
                 }
-                totalItemTotalPrice += itemTotalPrice * it.waffleCount
-                OrderedHistoryDetail(userOrderId, waffleDetail.waffleName, addOnNames, it.waffleCount.toString())
+                totalItemTotalPrice += (itemTotalPrice + hasTakeAway) * it.waffleCount
+                OrderedHistoryDetail(userOrderId, waffleDetail.waffleName, addOnNames,
+                    it.hasTakeAway == 1, it.waffleCount.toString())
             }
             val orderedHistoryHeader = OrderedHistoryHeader(userOrderId, totalItemTotalPrice.toString())
             orderHistoryDatabase.orderStateDao().addOrderHistoryDetail(OrderHistoryEntity(0, userOrderId, orderedHistoryHeader,

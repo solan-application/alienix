@@ -1,5 +1,8 @@
 package com.worldofwaffle
 
+import android.view.View
+import android.widget.CheckBox
+import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import com.worldofwaffle.database.OrderDetailRoomDatabase
@@ -20,6 +23,7 @@ class OrderDetailItemViewModel(
     val addOns = ObservableField("")
     val comma = ","
     var addedItemCount= ObservableInt(0)
+    val hasTakeAway = ObservableBoolean(false)
     var tempTotalPriceWithAddOn = 0
    // private var addOnItemList: List<BaseWaffleMultipleSelectionItemViewModel> = listOf()
     //private val waffleMultipleSelectionViewAdapter = WaffleMultipleSelectionViewAdapter()
@@ -34,6 +38,16 @@ class OrderDetailItemViewModel(
             )*/
         addedItemCount.set(waffleCount)
         addOns.set(addOnNames)
+    }
+
+    fun onCheckBoxClicked(view: View) {
+        val isChecked = (view as CheckBox).isChecked
+        hasTakeAway.set(isChecked)
+        if (isChecked) {
+            orderDetailRoomDatabase.orderDetailDataModelDao().updateTakeAwayStatue(1, waffleId, orderId)
+        } else {
+            orderDetailRoomDatabase.orderDetailDataModelDao().updateTakeAwayStatue(0, waffleId, orderId)
+        }
     }
 
     fun clickAdd() {

@@ -37,8 +37,9 @@ class ApplicationModule(private val application: Application) {
             .addCallback(object: RoomDatabase.Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
-                    db.execSQL("INSERT INTO WAFFLE_MENU_TABLE VALUES(101, 1001 ,\"WHITE CHOCO\", 120);");
-                    db.execSQL("INSERT INTO WAFFLE_MENU_TABLE VALUES(102, 1002 ,\"DEATH BY CHOCOLATE\", 120);");
+                    db.execSQL("INSERT INTO WAFFLE_MENU_TABLE VALUES(101, 1001 ,\"WC\", 120);");
+                    db.execSQL("INSERT INTO WAFFLE_MENU_TABLE VALUES(102, 1002 ,\"DBC\", 120);");
+                    db.execSQL("INSERT INTO WAFFLE_MENU_TABLE VALUES(103, 1003 ,\"CAC\", 120);");
                 }
             })
             .build()

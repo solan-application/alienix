@@ -13,7 +13,8 @@ data class OrderDetailEntity(
     val waffleId: String,
     val orderId: String,
     val waffleCount:Int,
+    val hasTakeAway: Int,
     val addedOnItemDetails: List<AddOnItem> = listOf()
 ){
-    constructor(waffleId: String, orderId: String, addedOnItemDetails: List<AddOnItem>) : this(0, "0", waffleId, orderId,1,  addedOnItemDetails)
+    constructor(waffleId: String, orderId: String, addedOnItemDetails: List<AddOnItem>) : this(0, "0", waffleId, orderId,1, 0,  addedOnItemDetails)
 }
