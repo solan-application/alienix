@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">WorldOfWaffle</string>
+    <string name="common_ok_button" formatted="true">OK</string>
+    <string name="common_cancel_button" formatted="true">CANCEL</string>
+    <string name="add_new_button" formatted="true">ADD NEW</string>
+    <string name="repeat_order_btn" formatted="true">REPEAT ORDER</string>
+
+
+</resources>

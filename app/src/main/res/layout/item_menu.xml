@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.worldofwaffle.menu.viewmodel.MenuItemViewModel" />
+
+        <import type="android.view.View" />
+    </data>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/waffle_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@{viewModel.waffleName}"
+        android:textSize="18sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left"
+        tools:text="White Choco"/>
+
+    <!--<androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/add_on_header_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Ons:"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@+id/waffle_name_tv"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/add_on_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@{viewModel.addOns}"
+        app:layout_constraintTop_toBottomOf="@+id/add_on_header_tv"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left"
+        tools:text="gems"/>-->
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/waffle_add_btn"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="ADD"
+        android:onClick="@{() -> viewModel.clickAdd()}"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guideline_center"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_right" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/waffle_repeat_btn"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="REPEAT"
+        android:onClick="@{() -> viewModel.clickRepeat()}"
+        app:layout_constraintTop_toBottomOf="@+id/waffle_add_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guideline_center"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_right" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.60" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
