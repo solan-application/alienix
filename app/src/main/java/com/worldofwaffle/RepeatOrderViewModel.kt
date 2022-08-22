@@ -40,6 +40,7 @@ class RepeatOrderViewModel @Inject constructor(val menuAdapter: OrderDetailAdapt
                     waffleDetail.waffleName,
                     waffleDetail.wafflePrice,
                     it.waffleCount,
+                    it.hasTakeAway,
                     addOnNames,
                     refreshOrderDetailListener)
             }

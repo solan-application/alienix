@@ -19,49 +19,6 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-        <!--<androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/header_background_color"
-            app:layout_constraintTop_toTopOf="parent"
-            app:navigationContentDescription="@string/abc_action_bar_up_description">
-
-            <ImageView
-                style="@style/SubTitle"
-                android:layout_width="@dimen/padding_twenty_dp"
-                android:layout_height="@dimen/padding_twenty_dp"
-                android:rotation="180"
-                android:onClick="@{() -> viewModel.navigateUp()}"
-                android:src="@drawable/ic_vehicle_arrow"/>
-
-            <TextView
-                style="@style/SubTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawablePadding="@dimen/padding_six_dp"
-                android:gravity="center"
-                android:textColor="@color/primary_info"
-                android:text="@string/account_settings_delete_account_title"
-                android:layout_gravity="center"/>
-
-        </androidx.appcompat.widget.Toolbar>
-        -->
-
-
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/menu_item_total"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{String.valueOf(viewModel.waffleTotalPrice)}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Item total"
-            />
-
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/delete_account_instruction_list"
             android:layout_width="0dp"
@@ -79,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.9" />
+            app:layout_constraintGuide_percent="0.97" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_start"
@@ -96,18 +53,11 @@
             app:layout_constraintGuide_percent="0.95" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_horizontal_center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.30" />
-
-        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_top"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.15" />
+            app:layout_constraintGuide_percent="0.03" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

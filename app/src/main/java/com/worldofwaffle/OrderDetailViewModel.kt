@@ -13,7 +13,7 @@ class OrderDetailViewModel @Inject constructor(val menuAdapter: OrderDetailAdapt
                                                private val orderDetailItemViewModelFactory: OrderDetailItemViewModel.Factory): BaseLifecycleViewModel() {
 
     val waffleTotalPrice = ObservableInt(0)
-    private val comma = ","
+    private val comma = ", "
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun setDescriptionItems() {
@@ -35,6 +35,7 @@ class OrderDetailViewModel @Inject constructor(val menuAdapter: OrderDetailAdapt
                     waffleDetail.waffleName,
                     waffleDetail.wafflePrice,
                     it.waffleCount,
+                    it.hasTakeAway,
                     addOnNames, refreshOrderDetailListener) }
             return waffleMenuItems
         }

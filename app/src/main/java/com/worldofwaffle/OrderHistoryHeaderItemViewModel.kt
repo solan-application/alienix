@@ -22,7 +22,7 @@ class OrderHistoryHeaderItemViewModel(
 
     init {
         userOrderId.set(orderedHistoryHeader.userOrderId)
-        itemTotalPrice.set(orderedHistoryHeader.itemTotalPrice)
+        itemTotalPrice.set("Total: "+ orderedHistoryHeader.itemTotalPrice)
         when(orderHistoryDatabase.orderStateDao().getPaidStatus(orderedHistoryHeader.userOrderId).paidStatus) {
             0 ->  paidAndDeliveredStatus.set("Yet to Pay")
            else ->  paidAndDeliveredStatus.set("Deliver in progress")

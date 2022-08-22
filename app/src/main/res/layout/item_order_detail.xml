@@ -14,11 +14,18 @@
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="130dp">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
     <CheckBox
         android:id="@+id/take_away_checkbox"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:buttonTint="@color/primary_blue"
         android:checked="@{viewModel.hasTakeAway}"
@@ -26,36 +33,29 @@
         android:paddingStart="5dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/waffle_name_tv"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@{viewModel.waffleName}"
-        android:textSize="18sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline_left"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_center"
+        app:layout_constraintStart_toEndOf="@+id/take_away_checkbox"
+        app:layout_constraintBottom_toTopOf="@+id/add_on_name_tv"
         tools:text="White Choco"/>
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/add_on_header_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Ons:"
-        android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@+id/waffle_name_tv"
-        app:layout_constraintStart_toStartOf="@+id/guideline_left"/>
-
-    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/add_on_name_tv"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@{viewModel.addOns}"
-        app:layout_constraintTop_toBottomOf="@+id/add_on_header_tv"
-        app:layout_constraintStart_toStartOf="@+id/guideline_left"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_center"
+        app:layout_constraintTop_toBottomOf="@+id/waffle_name_tv"
+        app:layout_constraintStart_toEndOf="@+id/take_away_checkbox"
         tools:text="gems"/>
 
     <androidx.appcompat.widget.AppCompatButton
@@ -63,9 +63,9 @@
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:text="+"
+        android:textSize="24sp"
         android:onClick="@{() -> viewModel.clickAdd()}"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/guideline_right" />
 
     <androidx.appcompat.widget.AppCompatButton
@@ -73,22 +73,37 @@
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:text="-"
+        android:textSize="24sp"
         android:onClick="@{() -> viewModel.clickMinus()}"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/guideline_center"
+        app:layout_constraintStart_toEndOf="@+id/guideline_vertical_center"
         />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/waffle_count_btn"
-        android:layout_width="50dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@{String.valueOf(viewModel.addedItemCount)}"
         android:gravity="center"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="24sp"
+        app:layout_constraintTop_toTopOf="@+id/waffle_minus_btn"
         app:layout_constraintEnd_toStartOf="@+id/waffle_add_btn"
-        app:layout_constraintStart_toEndOf="@+id/waffle_minus_btn"/>
+        app:layout_constraintStart_toEndOf="@+id/waffle_minus_btn"
+        app:layout_constraintBottom_toBottomOf="@+id/waffle_add_btn"
+        tools:text="1"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/shape_black_line"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/waffle_count_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
+       />
 
 
     <androidx.constraintlayout.widget.Guideline
@@ -106,11 +121,15 @@
         app:layout_constraintGuide_percent="0.95" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_center"
+        android:id="@+id/guideline_vertical_center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.60" />
+        app:layout_constraintGuide_percent="0.55" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -20,6 +20,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
+            android:textSize="18sp"
             android:text="@{viewModel.itemName}"
             android:textColor="@color/black"
             app:layout_constraintTop_toTopOf="parent"

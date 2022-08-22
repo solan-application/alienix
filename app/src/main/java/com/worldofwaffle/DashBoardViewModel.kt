@@ -42,12 +42,17 @@ private val eventBus: UnboundViewEventBus)
     }
 
     fun onNext() {
-        val userOrderId = UUID.randomUUID().toString()
-        orderDetailRoomDatabase.orderDetailDataModelDao().updateUserOrderId(userOrderId)
-        val orderDetailList = orderDetailRoomDatabase.orderDetailDataModelDao().getAllOrderDetails()
-        orderDetailRoomDatabase.orderDetailDataModelDao().deleteAllOrderDetail()
-        transientDataProvider.save(OrderDetailUseCase(orderDetailList))
-        eventBus.send(StartActivityEvent.build(this).activityName(OrdersStateActivity::class.java))
-        onPageChange(1)
+        if (orderDetailRoomDatabase.orderDetailDataModelDao().getAllOrderDetails().isNotEmpty()) {
+            val userOrderId = UUID.randomUUID().toString()
+            orderDetailRoomDatabase.orderDetailDataModelDao().updateUserOrderId(userOrderId)
+            val orderDetailList =
+                orderDetailRoomDatabase.orderDetailDataModelDao().getAllOrderDetails()
+            orderDetailRoomDatabase.orderDetailDataModelDao().deleteAllOrderDetail()
+            transientDataProvider.save(OrderDetailUseCase(orderDetailList))
+            eventBus.send(
+                StartActivityEvent.build(this).activityName(OrdersStateActivity::class.java)
+            )
+            onPageChange(1)
+        }
     }
 }

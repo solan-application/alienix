@@ -17,6 +17,7 @@ class OrderDetailItemViewModel(
     val waffleName: String,
     val wafflePrice: Int,
     private val waffleCount: Int,
+    private val isTakeAway: Int,
     private val addOnNames: String,
     private val refreshOrderDetailListener: () -> Unit): BaseLifecycleViewModel() {
 
@@ -38,6 +39,7 @@ class OrderDetailItemViewModel(
             )*/
         addedItemCount.set(waffleCount)
         addOns.set(addOnNames)
+        hasTakeAway.set(isTakeAway == 1)
     }
 
     fun onCheckBoxClicked(view: View) {
@@ -115,10 +117,11 @@ class OrderDetailItemViewModel(
             waffleName: String,
             wafflePrice: Int,
             waffleCount: Int,
+            isTakeAway: Int,
             addOnNames: String,
             refreshOrderDetailListener: () -> Unit): OrderDetailItemViewModel {
             return OrderDetailItemViewModel(eventBus, orderDetailRoomDatabase,
-                orderId, waffleId, waffleName, wafflePrice, waffleCount,
+                orderId, waffleId, waffleName, wafflePrice, waffleCount, isTakeAway,
                 addOnNames, refreshOrderDetailListener)
         }
     }
