@@ -113,7 +113,7 @@ class StartActivityEvent(emitter: Any): BaseUnboundViewEvent() {
         return intent
     }
 
-    fun setIntent(intent: Intent?): StartActivityEvent? {
+    fun setIntent(intent: Intent): StartActivityEvent {
         this.intent = intent
         return this
     }

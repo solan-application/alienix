@@ -13,6 +13,7 @@ import com.worldofwaffle.OrderedHistoryHeader
 data class OrderHistoryEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 1,
     val userId: String,
+    val dateOfOrder: String,
     val orderHistoryHeader: OrderedHistoryHeader,
     val orderHistoryDetail: List<OrderedHistoryDetail>,
     val deliveredStatus: Int = 0,

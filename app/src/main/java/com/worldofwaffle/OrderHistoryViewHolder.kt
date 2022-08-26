@@ -4,7 +4,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.worldofwaffle.databinding.*
 
-class OrderStateItemHolder(private val viewDataBinding: ViewDataBinding) : RecyclerView.ViewHolder(viewDataBinding.root) {
+class OrderHistoryViewHolder(private val viewDataBinding: ViewDataBinding) : RecyclerView.ViewHolder(viewDataBinding.root) {
 
     fun bind(viewModel: OrderHistoryDetailItemViewModel) {
         (viewDataBinding as ItemOrderStateBinding).viewModel = viewModel

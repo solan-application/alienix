@@ -1,5 +1,6 @@
 package com.worldofwaffle
 
+import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import com.worldofwaffle.commondialog.*
 import com.worldofwaffle.database.OrderHistoryDatabase
@@ -16,6 +17,7 @@ class OrderHistoryHeaderItemViewModel(
     val userOrderId = ObservableField("")
     val itemTotalPrice = ObservableField("")
     val paidAndDeliveredStatus = ObservableField("")
+    val hasOrderDelivered = ObservableBoolean(true)
     private var paidStatusList: List<BaseWaffleSingleSelectionItemViewModel> = listOf()
     private val waffleSingleSelectionViewAdapter = WaffleSingleSelectionViewAdapter()
 
@@ -23,9 +25,15 @@ class OrderHistoryHeaderItemViewModel(
     init {
         userOrderId.set(orderedHistoryHeader.userOrderId)
         itemTotalPrice.set("Total: "+ orderedHistoryHeader.itemTotalPrice)
-        when(orderHistoryDatabase.orderStateDao().getPaidStatus(orderedHistoryHeader.userOrderId).paidStatus) {
+        when(orderHistoryDatabase.orderStateDao().getSingleOrderHistory(orderedHistoryHeader.userOrderId).paidStatus) {
             0 ->  paidAndDeliveredStatus.set("Yet to Pay")
-           else ->  paidAndDeliveredStatus.set("Deliver in progress")
+           else ->  when(orderHistoryDatabase.orderStateDao().getSingleOrderHistory(orderedHistoryHeader.userOrderId).deliveredStatus) {
+               0 -> paidAndDeliveredStatus.set("Delivery In Progress")
+               else -> {
+                   paidAndDeliveredStatus.set("DELIVERED")
+                   hasOrderDelivered.set(false)
+               }
+           }
         }
     }
 
@@ -62,7 +70,7 @@ class OrderHistoryHeaderItemViewModel(
     }
 
     fun onClickDeliveredOrder() {
-        if (orderHistoryDatabase.orderStateDao().getPaidStatus(orderedHistoryHeader.userOrderId).paidStatus == 0 ) {
+        if (orderHistoryDatabase.orderStateDao().getSingleOrderHistory(orderedHistoryHeader.userOrderId).paidStatus == 0 ) {
             paymentModeDialog()
         }else {
             orderHistoryDatabase.orderStateDao()

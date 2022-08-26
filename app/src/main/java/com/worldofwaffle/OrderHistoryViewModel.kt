@@ -5,17 +5,22 @@ import androidx.lifecycle.OnLifecycleEvent
 import com.worldofwaffle.database.OrderHistoryDatabase
 import com.worldofwaffle.database.OrderHistoryEntity
 import com.worldofwaffle.database.WaffleMenuDatabase
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
-class OrderStateViewModel @Inject constructor(
+const val HOME_SCREEN = 1
+const val DASHBOARD_SCREEN = 2
+
+class OrderHistoryViewModel @Inject constructor(
     private val transientDataProvider: TransientDataProvider,
     private val menuDatabase: WaffleMenuDatabase,
-    val adapter: OrderStateAdapter,
+    val adapter: OrderHistoryAdapter,
     private val orderHistoryDatabase: OrderHistoryDatabase,
     private val orderHistoryHeaderItemViewModelFactory: OrderHistoryHeaderItemViewModel.Factory
 ): BaseLifecycleViewModel() {
 
-    private val comma = ","
+    private val comma = ", "
     private var allUndeliveredHistoryItemViewModelList: MutableList<BaseOrderHistoryViewModel> = arrayListOf()
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
@@ -27,7 +32,7 @@ class OrderStateViewModel @Inject constructor(
             var totalItemTotalPrice = 0
             var hasTakeAway = 0
             val orderedHistoryDetail = orderDetailList.map {
-                userOrderId = userOrderId.plus("UserID: ").plus(it.userOrderId.takeLast(8))
+                userOrderId = "UserID: "+it.userOrderId.takeLast(8)
                 var itemTotalPrice  = 0
                 val waffleDetail = menuDatabase.waffleMenuDao().getWaffleDetail(it.waffleId)
                 itemTotalPrice += waffleDetail.wafflePrice
@@ -42,10 +47,17 @@ class OrderStateViewModel @Inject constructor(
                     it.hasTakeAway == 1, it.waffleCount.toString())
             }
             val orderedHistoryHeader = OrderedHistoryHeader(userOrderId, totalItemTotalPrice.toString())
-            orderHistoryDatabase.orderStateDao().addOrderHistoryDetail(OrderHistoryEntity(0, userOrderId, orderedHistoryHeader,
+
+            orderHistoryDatabase.orderStateDao().addOrderHistoryDetail(OrderHistoryEntity(0, userOrderId, getCurrentDate(), orderedHistoryHeader,
                 orderedHistoryDetail,0, 0))
         }
-        val unDeliveredOrderHistory = orderHistoryDatabase.orderStateDao().getUnDeliveredOrderHistory()
+
+        val unDeliveredOrderHistory = if (transientDataProvider.containsUseCase(OrderHistoryStatusUseCase::class.java)
+            && transientDataProvider.remove(OrderHistoryStatusUseCase::class.java).screenId == HOME_SCREEN) {
+                orderHistoryDatabase.orderStateDao().getOrderHistory(getCurrentDate())
+        }else {
+            orderHistoryDatabase.orderStateDao().getDeliveredOrderHistory(0)
+        }
         if (unDeliveredOrderHistory.isNotEmpty()) {
             unDeliveredOrderHistory.map {
                 allUndeliveredHistoryItemViewModelList.addAll(it.orderHistoryDetail.map { orderedHistoryDetail ->  OrderHistoryDetailItemViewModel(orderedHistoryDetail) })
@@ -55,6 +67,8 @@ class OrderStateViewModel @Inject constructor(
         adapter.setAdapterData(allUndeliveredHistoryItemViewModelList)
 
     }
+
+    private fun getCurrentDate() = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
 
     private val refreshOrderHistoryListener: (userId: String) -> Unit = { userId ->
         allUndeliveredHistoryItemViewModelList.removeIf { orderHistory -> userId == orderHistory.userId }

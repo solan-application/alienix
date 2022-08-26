@@ -36,6 +36,11 @@ abstract class BaseActivity: AppCompatActivity() {
         subscribeToEventBus()
     }
 
+    override fun onPause() {
+        lifecycleSubscriptions.clear()
+        super.onPause()
+    }
+
     private fun subscribeToEventBus() {
         lifecycleSubscriptions.clear()
         val eventsSubscriptionV2 = registerUnboundViewEvents()
@@ -93,8 +98,10 @@ abstract class BaseActivity: AppCompatActivity() {
     open fun launchExternalApplication(event: StartActivityEvent) {
         try {
             if (event.getIntent() != null) {
+                Log.e("Intent" , "1")
                 startActivity(event.getIntent())
             } else {
+                Log.e("Intent" , "2")
                 startActivity(
                     Intent(
                         event.getIntentAction(),
@@ -104,6 +111,7 @@ abstract class BaseActivity: AppCompatActivity() {
             }
         } catch (ex: ActivityNotFoundException) {
             if (TextUtils.isEmpty(event.getActivityNotFoundUri())) {
+                Log.e("Intent" , "Error$ex")
                 //exceptionLogger.logException(ex)
             } else {
                 startActivity(

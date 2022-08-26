@@ -47,8 +47,34 @@ class ApplicationModule(private val application: Application) {
 
     @Singleton
     @Provides
+    fun provideWaffleFillingsDatabase(@ForApplication context: Context): WaffleFillingsDatabase {
+        return Room.databaseBuilder(context, WaffleFillingsDatabase::class.java, "WAFFLE_FILLINGS_DB")
+            .fallbackToDestructiveMigration()
+            .allowMainThreadQueries()
+            .addCallback(object: RoomDatabase.Callback() {
+                override fun onCreate(db: SupportSQLiteDatabase) {
+                    super.onCreate(db)
+                    db.execSQL("INSERT INTO WAFFLE_FILLINGS_TABLE VALUES(101, 3001 ,\"WC\");");
+                    db.execSQL("INSERT INTO WAFFLE_FILLINGS_TABLE VALUES(102, 3002 ,\"DUKE\");");
+                    db.execSQL("INSERT INTO WAFFLE_FILLINGS_TABLE VALUES(103, 3003 ,\"DC\");");
+                }
+            })
+            .build()
+    }
+
+    @Singleton
+    @Provides
     fun provideOrderDetailDatabase(@ForApplication context: Context): OrderDetailRoomDatabase {
         return Room.databaseBuilder(context, OrderDetailRoomDatabase::class.java, "ORDER_DETAIL_DB")
+            .fallbackToDestructiveMigration()
+            .allowMainThreadQueries()
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideHomeDatabase(@ForApplication context: Context): HomeDatabase {
+        return Room.databaseBuilder(context, HomeDatabase::class.java, "HOME_DB")
             .fallbackToDestructiveMigration()
             .allowMainThreadQueries()
             .build()

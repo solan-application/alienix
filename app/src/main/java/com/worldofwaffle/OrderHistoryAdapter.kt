@@ -10,17 +10,17 @@ import javax.inject.Inject
 private const val ITEM_HEADER = 0
 private const val ITEMS = 1
 
-class OrderStateAdapter @Inject constructor() : RecyclerView.Adapter<OrderStateItemHolder>() {
+class OrderHistoryAdapter @Inject constructor() : RecyclerView.Adapter<OrderHistoryViewHolder>() {
     private var orderStateItemViewModels: MutableList<BaseOrderHistoryViewModel> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         when (viewType) {
-            ITEM_HEADER -> OrderStateItemHolder(ItemOrderStateHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-            ITEMS -> OrderStateItemHolder(ItemOrderStateBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            ITEM_HEADER -> OrderHistoryViewHolder(ItemOrderStateHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            ITEMS -> OrderHistoryViewHolder(ItemOrderStateBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             else -> error("view type not handled")
         }
 
-    override fun onBindViewHolder(holder: OrderStateItemHolder, position: Int) {
+    override fun onBindViewHolder(holder: OrderHistoryViewHolder, position: Int) {
         when (val adapterItem = orderStateItemViewModels[position]) {
             is OrderHistoryDetailItemViewModel -> holder.bind(adapterItem)
             is OrderHistoryHeaderItemViewModel -> holder.bind(adapterItem)

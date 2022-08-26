@@ -22,10 +22,13 @@ class UnboundViewEventBus @Inject constructor(){
     }
 
     fun startActivity(viewModel: Any): Observable<StartActivityEvent> {
+        Log.e("Viewmodel ", viewModel.javaClass.simpleName)
         return startActivity(viewModel.javaClass)
     }
 
-    private fun startActivity(viewModelClass: Class<*>): Observable<StartActivityEvent> {
+    fun startActivity(viewModelClass: Class<*>): Observable<StartActivityEvent> {
+        //Log.e("Viewmodel1 ", viewModelClass.simpleName)
+
         return startActivitySubject.filter { event: StartActivityEvent ->
             fromEmitter(event, viewModelClass) }
     }
@@ -40,6 +43,8 @@ class UnboundViewEventBus @Inject constructor(){
     }
 
     private fun fromEmitter(event: BaseUnboundViewEvent, viewModelClass: Class<*>): Boolean {
+        Log.e("Viewmodel2 ", viewModelClass.simpleName)
+        Log.e("Viewmodel3 ", event.emitter?.javaClass?.simpleName.toString())
         return viewModelClass.simpleName == event.emitter?.javaClass?.simpleName.toString()
     }
 }

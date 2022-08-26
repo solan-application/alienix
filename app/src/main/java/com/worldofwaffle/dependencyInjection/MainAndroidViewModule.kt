@@ -1,9 +1,6 @@
 package com.worldofwaffle.dependencyInjection
 
-import com.worldofwaffle.DashBoardActivity
-import com.worldofwaffle.OrderDetailFragment
-import com.worldofwaffle.OrdersStateActivity
-import com.worldofwaffle.RepeatOrderFragment
+import com.worldofwaffle.*
 import com.worldofwaffle.menu.MenuFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -24,5 +21,11 @@ abstract class MainAndroidViewModule {
     abstract fun bindRepeatOrderFragment(): RepeatOrderFragment
 
     @ContributesAndroidInjector
-    abstract fun bindOrderStateActivity(): OrdersStateActivity
+    abstract fun bindOrderStateActivity(): OrderHistoryActivity
+
+    @ContributesAndroidInjector
+    abstract fun bindHomeActivity(): HomeActivity
+
+    @ContributesAndroidInjector
+    abstract fun bindWaffleFillingsActivity(): WaffleFillingsActivity
 }

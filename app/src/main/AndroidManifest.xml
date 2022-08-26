@@ -23,7 +23,15 @@
 
 
         <activity
-            android:name=".OrdersStateActivity"
+            android:name=".OrderHistoryActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".HomeActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".WaffleFillingsActivity"
             android:screenOrientation="portrait" />
     </application>
 

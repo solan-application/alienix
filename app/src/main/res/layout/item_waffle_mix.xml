@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.worldofwaffle.WaffleMixItemViewModel" />
+    </data>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/gray">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="5dp"
+        android:background="@color/white"
+        >
+
+        <TextView
+            android:id="@+id/used_kg_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.usedKg}"
+            android:textSize="18sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="10dp"
+            tools:text="TodayKg"
+            />
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/half_kg_btn"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="HALF KG"
+        android:gravity="center"
+        android:onClick="@{()-> viewModel.onClickKgs(500)}"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/used_kg_tv"
+        android:textSize="18sp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/one_kg_btn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="ONE KG"
+            android:gravity="center"
+            android:onClick="@{()-> viewModel.onClickKgs(1000)}"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/half_kg_btn"
+            android:textSize="18sp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/two_kg_btn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="TWO KG"
+            android:onClick="@{()-> viewModel.onClickKgs(2000)}"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/one_kg_btn"
+            android:textSize="18sp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

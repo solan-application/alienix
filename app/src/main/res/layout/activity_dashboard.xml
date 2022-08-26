@@ -13,13 +13,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_blue"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationContentDescription="@string/abc_action_bar_up_description">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:layout_gravity="end"
+            android:onClick="@{() -> viewModel.onClickHome()}"
+            android:src="@drawable/ic_home"/>
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:layout_gravity="end"
+            android:layout_marginEnd="20dp"
+            android:onClick="@{() -> viewModel.onClickShare()}"
+            android:src="@drawable/ic_share"/>
+
+    </androidx.appcompat.widget.Toolbar>
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="#00a294"
         app:pager="@{dashboardViewPager}"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:tabTextColor="@android:color/background_light"
@@ -40,12 +67,22 @@
     </androidx.viewpager.widget.ViewPager>
 
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/next_btn"
         android:layout_width="150dp"
         android:layout_height="0dp"
         android:text="NEXT"
         android:onClick="@{() -> viewModel.onNext()}"
         app:layout_constraintTop_toBottomOf="@+id/guideline_bottom"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="150dp"
+        android:layout_height="0dp"
+        android:text="ORDERS"
+        android:onClick="@{() -> viewModel.onUnDeliverOrders()}"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_bottom"
+        app:layout_constraintEnd_toStartOf="@+id/next_btn"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <androidx.appcompat.widget.AppCompatButton
