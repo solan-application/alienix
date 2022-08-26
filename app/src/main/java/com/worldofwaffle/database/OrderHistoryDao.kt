@@ -28,16 +28,16 @@ interface OrderHistoryDao {
     @Query("SELECT * FROM ORDER_HISTORY_TABLE WHERE dateOfOrder= :date")
     fun isOrderExist(date: String): Boolean
 
-    @Query("SELECT * FROM ORDER_HISTORY_TABLE WHERE paidStatus=1 AND deliveredStatus = 1")
-    fun getCashOrders(): List<OrderHistoryEntity>
+    @Query("SELECT * FROM ORDER_HISTORY_TABLE WHERE dateOfOrder= :date AND paidStatus=1 AND deliveredStatus = 1")
+    fun getCashOrders(date: String): List<OrderHistoryEntity>
 
-    @Query("SELECT * FROM ORDER_HISTORY_TABLE WHERE paidStatus=2 AND deliveredStatus = 1")
-    fun getUpiOrders(): List<OrderHistoryEntity>
+    @Query("SELECT * FROM ORDER_HISTORY_TABLE WHERE dateOfOrder= :date AND paidStatus=2 AND deliveredStatus = 1")
+    fun getUpiOrders(date: String): List<OrderHistoryEntity>
 
-    @Query("SELECT * FROM ORDER_HISTORY_TABLE WHERE paidStatus=3 AND deliveredStatus = 1")
-    fun getZomatoOrders(): List<OrderHistoryEntity>
+    @Query("SELECT * FROM ORDER_HISTORY_TABLE WHERE dateOfOrder= :date AND paidStatus=3 AND deliveredStatus = 1")
+    fun getZomatoOrders(date: String): List<OrderHistoryEntity>
 
-    @Query("SELECT * FROM ORDER_HISTORY_TABLE WHERE paidStatus=4 AND deliveredStatus = 1")
-    fun getZaaroOrders(): List<OrderHistoryEntity>
+    @Query("SELECT * FROM ORDER_HISTORY_TABLE WHERE dateOfOrder= :date AND paidStatus=4 AND deliveredStatus = 1")
+    fun getZaaroOrders(date: String): List<OrderHistoryEntity>
 
 }

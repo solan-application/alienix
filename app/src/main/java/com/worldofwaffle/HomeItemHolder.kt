@@ -15,4 +15,9 @@ class HomeItemHolder(private val viewDataBinding: ViewDataBinding) : RecyclerVie
         (viewDataBinding as ItemWaffleMixBinding).viewModel = viewModel
         viewDataBinding.executePendingBindings()
     }
+
+    fun bind(viewModel: CashInBoxItemViewModel) {
+        (viewDataBinding as ItemCashInBoxBinding).viewModel = viewModel
+        viewDataBinding.executePendingBindings()
+    }
 }

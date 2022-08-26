@@ -15,8 +15,8 @@
     android:onClick="@{() -> viewModel.onClick()}">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         app:layout_constraintStart_toStartOf="@+id/guideline_start"
         app:layout_constraintEnd_toEndOf="@+id/guideline_end"
         app:layout_constraintTop_toTopOf="@+id/guideline_top"

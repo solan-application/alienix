@@ -17,6 +17,7 @@
         <entry key="app/src/main/res/layout/fragment_menu.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_order_detail.xml" value="0.23867753623188406" />
         <entry key="app/src/main/res/layout/fragment_repeat_order.xml" value="0.20260416666666667" />
+        <entry key="app/src/main/res/layout/item_cash_in_box.xml" value="0.22554347826086957" />
         <entry key="app/src/main/res/layout/item_common_home.xml" value="0.22554347826086957" />
         <entry key="app/src/main/res/layout/item_menu.xml" value="0.33016304347826086" />
         <entry key="app/src/main/res/layout/item_multi_selection.xml" value="0.2513586956521739" />

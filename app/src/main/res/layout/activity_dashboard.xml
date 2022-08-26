@@ -68,7 +68,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/next_btn"
-        android:layout_width="150dp"
+        android:layout_width="100dp"
         android:layout_height="0dp"
         android:text="NEXT"
         android:onClick="@{() -> viewModel.onNext()}"
@@ -77,16 +77,18 @@
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:layout_width="150dp"
+        android:layout_width="100dp"
         android:layout_height="0dp"
         android:text="ORDERS"
         android:onClick="@{() -> viewModel.onUnDeliverOrders()}"
         app:layout_constraintTop_toBottomOf="@+id/guideline_bottom"
         app:layout_constraintEnd_toStartOf="@+id/next_btn"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cancel_order_btn"/>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:layout_width="150dp"
+        android:id="@+id/cancel_order_btn"
+        android:layout_width="100dp"
         android:layout_height="0dp"
         android:text="CANCEL ORDER"
         android:onClick="@{() -> viewModel.onCancelOrder()}"

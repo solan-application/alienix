@@ -66,7 +66,6 @@ private val eventBus: UnboundViewEventBus)
     fun onClickShare() {
 
        // val uri = Uri.parse("smsto: 9677345243")
-        val testData = "TestData"
         val uri = Uri.parse("https://api.whatsapp.com/send?phone=$919176014015&text=${getTodayReport()}")
         val i = Intent(Intent.ACTION_VIEW, uri)
         i.setPackage("com.whatsapp")
@@ -80,28 +79,42 @@ private val eventBus: UnboundViewEventBus)
         var zomatoOrderTotal = 0
         var zaarozOrderTotal = 0
         var fillingsNameAndCount = "FILLINGS: \n ---------- \n"
+        var mixCount = "WAFFLEMIX: \n ----------- \n"
 
-        val cashOrders = orderHistoryDatabase.orderStateDao().getCashOrders()
+        val cashOrders = orderHistoryDatabase.orderStateDao().getCashOrders(getCurrentDate())
         cashOrders.map { cashOrderTotal += it.orderHistoryHeader.itemTotalPrice.toInt()  }
-        val upiOrders = orderHistoryDatabase.orderStateDao().getUpiOrders()
+        val upiOrders = orderHistoryDatabase.orderStateDao().getUpiOrders(getCurrentDate())
         upiOrders.map { upiOrderTotal += it.orderHistoryHeader.itemTotalPrice.toInt()  }
-        val zomatoOrders = orderHistoryDatabase.orderStateDao().getZomatoOrders()
+        val zomatoOrders = orderHistoryDatabase.orderStateDao().getZomatoOrders(getCurrentDate())
         zomatoOrders.map { zomatoOrderTotal += it.orderHistoryHeader.itemTotalPrice.toInt()  }
-        val zaarozOrders = orderHistoryDatabase.orderStateDao().getZaaroOrders()
+        val zaarozOrders = orderHistoryDatabase.orderStateDao().getZaaroOrders(getCurrentDate())
         zaarozOrders.map { zaarozOrderTotal += it.orderHistoryHeader.itemTotalPrice.toInt()  }
+
+        if (homeDatabase.cashInBoxDao().isExist()) {
+            val cashBox = homeDatabase.cashInBoxDao().getCashBox()
+            var remainingCash = 0
+            if (cashBox.cashIn > 0)
+             remainingCash = cashBox.cashIn - cashBox.cashOut
+            cashOrderTotal += remainingCash
+        }
 
         val totalPrice = "TOTAL CASH: \n --------- \n cash: $cashOrderTotal\n  upiCash: $upiOrderTotal\n " +
                 " zomatoCash: $zomatoOrderTotal\n  ZaroozCash: $zaarozOrderTotal\n"
 
-        val fillingsDetail = fillingsDatabase.waffleFillingsDao().getFillingsDetail(getCurrentDate(), 0.0)
-        fillingsDetail.map {
-            fillingsNameAndCount += it.fillingsName +": " + it.fillingCount.toString() +"\n"
+        if(fillingsDatabase.waffleFillingsDao().isExists(getCurrentDate())) {
+            val fillingsDetail =
+                fillingsDatabase.waffleFillingsDao().getFillingsDetail(getCurrentDate())
+            fillingsDetail.map {
+                fillingsNameAndCount += it.fillingsName + ": " + it.fillingCount.toString() + "\n"
+            }
         }
 
-        val mixCount = homeDatabase.waffleMixDao().getWaffleMixKg(getCurrentDate()).mixInKg.toString()
+        if(homeDatabase.waffleMixDao().isExists(getCurrentDate())) {
+               mixCount += homeDatabase.waffleMixDao().getWaffleMixKg(getCurrentDate()).mixInKg.toString()
+        }
 
         return totalPrice.plus("\n"+fillingsNameAndCount).plus("\n" +
-                "WAFFLEMIX: \n ----------- \n $mixCount")
+                mixCount)
     }
 
     fun onUnDeliverOrders() {

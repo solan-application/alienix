@@ -11,13 +11,15 @@ const val WAFFLE_FILLINGS = 1
 class HomeViewModel @Inject constructor(val eventBus: UnboundViewEventBus,
                                         val adapter: HomeAdapter,
 private val commonHomeItemViewModelFactory: CommonHomeItemViewModel.Factory,
-private val waffleMixItemViewModelFactory: WaffleMixItemViewModel.Factory): BaseLifecycleViewModel() {
+private val waffleMixItemViewModelFactory: WaffleMixItemViewModel.Factory,
+private val cashInBoxItemViewModelFactory: CashInBoxItemViewModel.Factory): BaseLifecycleViewModel() {
 
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun onCreate() {
         val homeItems = listOf(commonHomeItemViewModelFactory.newInstance(ORDER_HISTORY),
-            commonHomeItemViewModelFactory.newInstance(WAFFLE_FILLINGS), waffleMixItemViewModelFactory.newInstance())
+            commonHomeItemViewModelFactory.newInstance(WAFFLE_FILLINGS), waffleMixItemViewModelFactory.newInstance(),
+        cashInBoxItemViewModelFactory.newInstance())
         homeItems.forEach { it.viewCallbackEmitter = viewCallbackEmitter }
         adapter.setAdapterData(homeItems)
     }
