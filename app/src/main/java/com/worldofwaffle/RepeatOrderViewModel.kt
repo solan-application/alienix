@@ -15,11 +15,14 @@ class RepeatOrderViewModel @Inject constructor(val menuAdapter: OrderDetailAdapt
 
     private val comma = ","
     private var waffleId = ""
+    private var userOrderId = ""
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun onCreate() {
         if (transientDataProvider.containsUseCase(RepeatOrderUseCase::class.java)) {
-            waffleId = transientDataProvider.remove(RepeatOrderUseCase::class.java).waffleId
+            val repeatOrderUseCase = transientDataProvider.remove(RepeatOrderUseCase::class.java)
+            userOrderId = repeatOrderUseCase.userOrderId
+            waffleId = repeatOrderUseCase.waffleId
             setDescriptionItems()
         }
     }
@@ -31,7 +34,8 @@ class RepeatOrderViewModel @Inject constructor(val menuAdapter: OrderDetailAdapt
 
     private fun waffleMenuItems(): List<OrderDetailItemViewModel> {
         if (waffleId.isNotEmpty()) {
-            val waffleMenuItems = orderDetailRoomDatabase.orderDetailDataModelDao().getOrderDetail(waffleId).map {
+            val waffleMenuItems = orderDetailRoomDatabase.orderDetailDataModelDao().getOrderDetail(userOrderId,
+                waffleId).map {
                 val waffleDetail = waffleMenuDatabase.waffleMenuDao().getWaffleDetail(it.waffleId)
                 val addOnNames = it.addedOnItemDetails.joinToString(comma) { addOnItem -> addOnItem.addOnName }
                 orderDetailItemViewModelFactory.newInstance(
@@ -42,6 +46,7 @@ class RepeatOrderViewModel @Inject constructor(val menuAdapter: OrderDetailAdapt
                     it.waffleCount,
                     it.hasTakeAway,
                     addOnNames,
+                    userOrderId,
                     refreshOrderDetailListener)
             }
             return waffleMenuItems

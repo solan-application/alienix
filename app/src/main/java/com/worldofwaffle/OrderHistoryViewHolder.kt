@@ -15,4 +15,9 @@ class OrderHistoryViewHolder(private val viewDataBinding: ViewDataBinding) : Rec
         (viewDataBinding as ItemOrderStateHeaderBinding).viewModel = viewModel
         viewDataBinding.executePendingBindings()
     }
+
+    fun bind(viewModel: OrderHistoryEditItemViewModel) {
+        (viewDataBinding as ItemOrderEditBinding).viewModel = viewModel
+        viewDataBinding.executePendingBindings()
+    }
 }

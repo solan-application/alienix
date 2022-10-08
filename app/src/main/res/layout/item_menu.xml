@@ -15,8 +15,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/gray"
+    android:background="@{viewModel.itemSelected ? @color/green : @color/gray}"
     android:layout_margin="5dp"
+    tools:background="@color/gray"
    >
 
     <androidx.constraintlayout.widget.ConstraintLayout

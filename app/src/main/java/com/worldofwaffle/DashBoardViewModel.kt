@@ -1,35 +1,28 @@
 package com.worldofwaffle
 
+import android.content.Intent
+import android.net.Uri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.worldofwaffle.database.OrderDetailRoomDatabase
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.OnLifecycleEvent
+import com.worldofwaffle.database.*
 import com.worldofwaffle.eventbus.StartActivityEvent
 import com.worldofwaffle.eventbus.UnboundViewEventBus
 import com.worldofwaffle.menu.MenuFragment
+import com.worldofwaffle.menu.adapter.MenuAdapter
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
-import android.content.Intent
-
-import androidx.core.content.ContextCompat.startActivity
-
-import android.net.Uri
-import androidx.core.content.ContextCompat
-import android.content.pm.PackageManager
-
-import android.content.pm.PackageInfo
-import android.util.Log
-import com.worldofwaffle.database.HomeDatabase
-import com.worldofwaffle.database.OrderHistoryDatabase
-import com.worldofwaffle.database.WaffleFillingsDatabase
-import java.text.SimpleDateFormat
 
 
 class DashBoardViewModel @Inject constructor(private val orderDetailRoomDatabase: OrderDetailRoomDatabase,
                                              private val orderHistoryDatabase: OrderHistoryDatabase,
                                              private val fillingsDatabase: WaffleFillingsDatabase,
                                              private val homeDatabase: HomeDatabase,
-private val transientDataProvider: TransientDataProvider,
-private val eventBus: UnboundViewEventBus)
+                                             private val transientDataProvider: TransientDataProvider,
+                                             private val eventBus: UnboundViewEventBus,
+                                             val menuAdapter: MenuAdapter)
     : BaseLifecycleViewModel() {
 
     private lateinit var adapter: DashboardFragmentPagerAdapter
@@ -39,6 +32,27 @@ private val eventBus: UnboundViewEventBus)
         screens = setScreens()
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    fun onCreate() {
+        val userOrderId = UUID.randomUUID().toString()
+        if (!orderDetailRoomDatabase.userOrderIdDao().isUserOrderIdExist()) {
+            orderDetailRoomDatabase.userOrderIdDao().addUserOrderId(UserOrderIdEntity(userOrderId = userOrderId))
+        }else {
+            orderDetailRoomDatabase.userOrderIdDao().updateUserOrderId(userOrderId)
+        }
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+    fun onResume() {
+        if (transientDataProvider.containsUseCase(OrderHistoryBackUseCase::class.java)) {
+            transientDataProvider.remove(OrderHistoryBackUseCase::class.java)
+            val userOrderId = UUID.randomUUID().toString()
+            orderDetailRoomDatabase.userOrderIdDao().updateUserOrderId(userOrderId)
+        }
+    }
+
+
+
     private fun setScreens() = listOf( MenuFragment(), OrderDetailFragment())
 
 
@@ -46,6 +60,9 @@ private val eventBus: UnboundViewEventBus)
         if (position == 1){
             val orderDetailFragment = screens[1] as OrderDetailFragment
             orderDetailFragment.onPageShow()
+        }else if (position == 0) {
+            val menuFragment = screens[0] as MenuFragment
+            menuFragment.onPageShow()
         }
     }
 
@@ -56,7 +73,10 @@ private val eventBus: UnboundViewEventBus)
     fun getAdapter(): DashboardFragmentPagerAdapter = adapter
 
     fun onCancelOrder() {
-        orderDetailRoomDatabase.orderDetailDataModelDao().deleteAllOrderDetail()
+        val existingUserOrderId = orderDetailRoomDatabase.userOrderIdDao().getUserOrderId().userOrderId
+        orderDetailRoomDatabase.orderDetailDataModelDao().deleteAllOrderDetail(existingUserOrderId)
+        val userOrderId = UUID.randomUUID().toString()
+        orderDetailRoomDatabase.userOrderIdDao().updateUserOrderId(userOrderId)
     }
 
     fun onClickHome() {
@@ -126,17 +146,18 @@ private val eventBus: UnboundViewEventBus)
 
 
     fun onNext() {
-        if (orderDetailRoomDatabase.orderDetailDataModelDao().getAllOrderDetails().isNotEmpty()) {
+        val existingUserOrderId = orderDetailRoomDatabase.userOrderIdDao().getUserOrderId().userOrderId
+        if (orderDetailRoomDatabase.orderDetailDataModelDao().getAllOrderDetails(existingUserOrderId).isNotEmpty()) {
             val userOrderId = UUID.randomUUID().toString()
-            orderDetailRoomDatabase.orderDetailDataModelDao().updateUserOrderId(userOrderId)
+            orderDetailRoomDatabase.userOrderIdDao().updateUserOrderId(userOrderId)
             val orderDetailList =
-                orderDetailRoomDatabase.orderDetailDataModelDao().getAllOrderDetails()
-            orderDetailRoomDatabase.orderDetailDataModelDao().deleteAllOrderDetail()
+                orderDetailRoomDatabase.orderDetailDataModelDao().getAllOrderDetails(existingUserOrderId)
             transientDataProvider.save(OrderDetailUseCase(orderDetailList))
             eventBus.send(
                 StartActivityEvent.build(this).activityName(OrderHistoryActivity::class.java)
             )
             onPageChange(1)
+            onPageChange(0)
         }
     }
 }

@@ -1,3 +1,3 @@
 package com.worldofwaffle
 
-class RepeatOrderUseCase(val waffleId: String): UseCase
+class RepeatOrderUseCase(val userOrderId: String, val waffleId: String): UseCase

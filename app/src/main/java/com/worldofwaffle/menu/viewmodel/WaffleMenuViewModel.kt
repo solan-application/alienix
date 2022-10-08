@@ -2,8 +2,6 @@ package com.worldofwaffle.menu.viewmodel
 
 import androidx.databinding.ObservableInt
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.OnLifecycleEvent
 import com.worldofwaffle.BaseLifecycleViewModel
 import com.worldofwaffle.database.WaffleMenuDatabase
 import com.worldofwaffle.menu.adapter.MenuAdapter
@@ -13,7 +11,6 @@ class WaffleMenuViewModel @Inject constructor(val menuAdapter: MenuAdapter,
                                               private val waffleMenuDatabase: WaffleMenuDatabase,
                                               private val menuItemViewModelFactory: MenuItemViewModel.Factory): BaseLifecycleViewModel() {
 
-    val waffleTotalPrice = ObservableInt(0)
 
     fun setDescriptionItems(fragmentManager: FragmentManager) {
         val waffleMenuItems = waffleMenuItems(fragmentManager)
@@ -22,7 +19,7 @@ class WaffleMenuViewModel @Inject constructor(val menuAdapter: MenuAdapter,
     }
 
     private fun waffleMenuItems(fragmentManager: FragmentManager) = waffleMenuDatabase.waffleMenuDao()
-        .getWaffleMenu().map { menuItemViewModelFactory.newInstance(it, fragmentManager) }
+        .getWaffleMenu().map { menuItemViewModelFactory.newInstance(waffleMenuEntity = it, fragmentManager = fragmentManager) }
 
     /*fun addedWaffleTotalPrice(itemPrice: Int) {
         val totalWafflePrice = waffleTotalPrice.get()

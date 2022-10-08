@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import com.worldofwaffle.databinding.ActivityDashboardBinding
 import com.worldofwaffle.eventbus.UnboundViewEventBus
+import com.worldofwaffle.menu.viewmodel.MenuItemViewModel
 import dagger.android.AndroidInjection
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject

@@ -1,6 +1,7 @@
 package com.worldofwaffle.menu.viewmodel
 
 import androidx.core.util.Pair
+import androidx.databinding.ObservableBoolean
 import androidx.fragment.app.FragmentManager
 import com.worldofwaffle.R
 import com.worldofwaffle.RepeatOrderFragment
@@ -21,16 +22,16 @@ import com.worldofwaffle.menu.AddOnItem
 import java.util.*
 import javax.inject.Inject
 
+
 class MenuItemViewModel(
     private val eventBus: UnboundViewEventBus,
     private val orderDetailRoomDatabase: OrderDetailRoomDatabase,
     private val fragmentManager: FragmentManager,
     private val transientDataProvider: TransientDataProvider,
     private val addOnsDatabase: AddOnsDatabase,
-    private val waffleId: String,
+    val waffleId: String,
     val waffleName: String,
-    val wafflePrice: Int
-): BaseMenuItemViewModel() {
+    val wafflePrice: Int): BaseMenuItemViewModel() {
 
     //val addOns = ObservableField("")
     //val comma = ","
@@ -38,11 +39,15 @@ class MenuItemViewModel(
     //var tempTotalPriceWithAddOn = 0
     private var addOnItemList: List<BaseWaffleMultipleSelectionItemViewModel> = listOf()
     private val waffleMultipleSelectionViewAdapter = WaffleMultipleSelectionViewAdapter()
+    private var userOrderId = ""
+    val itemSelected = ObservableBoolean(false)
 
     init {
         addOnItemList = addOnsDatabase.addOnDao().getAllAddOns().map {
                 AddOnItem(it.addOnId, it.addOnName, it.addOnPrice)
         }
+        userOrderId = orderDetailRoomDatabase.userOrderIdDao().getUserOrderId().userOrderId
+        isOrderExist()
     }
 
     fun clickAdd() {
@@ -50,11 +55,22 @@ class MenuItemViewModel(
     }
 
     fun clickRepeat() {
-        if (orderDetailRoomDatabase.orderDetailDataModelDao().isOrderExist(waffleId)) {
-            transientDataProvider.save(RepeatOrderUseCase(waffleId))
-            val fragment = RepeatOrderFragment()
+        if (orderDetailRoomDatabase.orderDetailDataModelDao()
+                .isOrderExist(userOrderId = userOrderId, waffleId = waffleId)) {
+            transientDataProvider.save(RepeatOrderUseCase(userOrderId, waffleId))
+            val fragment = RepeatOrderFragment(fragmentDialogOnDismissListener)
             fragment.show(fragmentManager, "repeat_order_bottom_sheet")
         }
+    }
+
+    private val fragmentDialogOnDismissListener: () -> Unit = {
+        isOrderExist()
+    }
+
+    private fun isOrderExist() {
+        val orderExistStatus = orderDetailRoomDatabase.orderDetailDataModelDao()
+            .getOrderDetail(userOrderId = userOrderId, waffleId = waffleId).isNotEmpty()
+        itemSelected.set(orderExistStatus)
     }
 
     private fun addingAddOnsDialog() {
@@ -72,58 +88,22 @@ class MenuItemViewModel(
         eventBus.send(event)
     }
 
-    /*private fun addNewOrRepeatDialog() {
-        val buttons = listOf(
-            Pair.create(R.string.add_new_button, PRIMARY),
-            Pair.create(R.string.repeat_order_btn, SECONDARY)
-        )
-        val event: WaffleDialogEvent = WaffleDialogEvent
-            .build(this)
-            .setDialogTitle("Select option")
-            .setListener(addNewOrRepeatListener)
-            .setButtonListWithType(buttons)
-        eventBus.send(event)
-    }*/
-
-    /*fun clickMinus() {
-        if (addedItemCount.get() != 0) {
-            val removedItemPrice = tempTotalPriceWithAddOn.div(addedItemCount.get())
-            waffleMenuViewModel.removedWaffleTotalPrice(removedItemPrice)
-            tempTotalPriceWithAddOn -= removedItemPrice
-            addedItemCount.set(addedItemCount.get().minus(1))
-        } else {
-            addOns.set("")
-        }
-    }*/
-
-    /*private val addNewOrRepeatListener: WaffleDialogListener = object: WaffleDialogListener {
-        override fun onButtonClickedAtIndex(index: Int) {
-            if (index == 0) {
-                addingAddOnsDialog()
-            }else{
-                val existingWaffleCount = orderDetailRoomDatabase.orderDetailDataModelDao().getOrderDetail(waffleId).waffleCount
-                orderDetailRoomDatabase.orderDetailDataModelDao().addItemCount(existingWaffleCount+1, waffleId)
-            }
-        }
-    }*/
-
     private val waffleDialogListener: WaffleDialogListener = object : WaffleDialogListener {
         override fun onButtonClickedAtIndex(index: Int) {
             dismissDialog()
         }
 
         override fun onMultipleSelection(multipleSelections: List<BaseWaffleMultipleSelectionItemViewModel>) {
-            //var addedAddOnPrice = 0
             val addOnItems = (multipleSelections as List<AddOnItem>)
                 .filter { it.isChecked.get() }
                 .map { AddOnItem(it.addOnId, it.addOnName, it.addOnPrice) }
-          //  addOns.set(addOnNames)
-            //addedItemCount.set(addedItemCount.get() + 1)
-            //val addedItemPrice = wafflePrice + addedAddOnPrice
-            //tempTotalPriceWithAddOn += addedItemPrice
-           // waffleMenuViewModel.addedWaffleTotalPrice(addedItemPrice)
             val orderId = UUID.randomUUID().toString()
-         orderDetailRoomDatabase.orderDetailDataModelDao().addOrderedWaffleDetail(OrderDetailEntity(waffleId, orderId, addOnItems))
+            orderDetailRoomDatabase.orderDetailDataModelDao()
+                .addOrderedWaffleDetail(OrderDetailEntity(userOrderId = userOrderId,
+                    waffleId =  waffleId,
+                    orderId = orderId,
+                    addedOnItemDetails = addOnItems))
+           isOrderExist()
         }
     }
 

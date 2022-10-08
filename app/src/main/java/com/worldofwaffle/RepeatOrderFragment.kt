@@ -1,6 +1,7 @@
 package com.worldofwaffle
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,13 +13,20 @@ import com.worldofwaffle.databinding.FragmentRepeatOrderBinding
 import dagger.android.support.DaggerAppCompatDialogFragment
 import javax.inject.Inject
 
-class RepeatOrderFragment: DaggerAppCompatDialogFragment() {
+class RepeatOrderFragment(private val onDismissedListener: () -> Unit): DaggerAppCompatDialogFragment() {
 
     @Inject
     lateinit var viewModel: RepeatOrderViewModel
 
     private val viewCallbackEmitter = ViewCallbackEmitter()
 
+    private lateinit var onDismissListener: () -> Unit
+
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        this.onDismissListener = onDismissedListener
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,6 +42,11 @@ class RepeatOrderFragment: DaggerAppCompatDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return BottomSheetDialog(requireContext(), theme)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        onDismissListener.invoke()
     }
 
 }

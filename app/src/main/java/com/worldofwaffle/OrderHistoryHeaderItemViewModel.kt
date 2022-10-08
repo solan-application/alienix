@@ -3,6 +3,7 @@ package com.worldofwaffle
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import com.worldofwaffle.commondialog.*
+import com.worldofwaffle.database.OrderDetailRoomDatabase
 import com.worldofwaffle.database.OrderHistoryDatabase
 import com.worldofwaffle.eventbus.UnboundViewEventBus
 import javax.inject.Inject
@@ -11,6 +12,7 @@ class OrderHistoryHeaderItemViewModel(
     private val orderedHistoryHeader: OrderedHistoryHeader,
     private val orderHistoryDatabase: OrderHistoryDatabase,
     private val eventBus: UnboundViewEventBus,
+    private val orderDetailRoomDatabase: OrderDetailRoomDatabase,
     private val refreshOrderHistoryListener: (userId: String) -> Unit)
     : BaseOrderHistoryViewModel(orderedHistoryHeader.userOrderId){
 
@@ -73,6 +75,7 @@ class OrderHistoryHeaderItemViewModel(
         if (orderHistoryDatabase.orderStateDao().getSingleOrderHistory(orderedHistoryHeader.userOrderId).paidStatus == 0 ) {
             paymentModeDialog()
         }else {
+            orderDetailRoomDatabase.orderDetailDataModelDao().deleteAllOrderDetail(orderedHistoryHeader.userOrderId)
             orderHistoryDatabase.orderStateDao()
                 .updateDeliveredOrderStatus(1, orderedHistoryHeader.userOrderId)
             refreshOrderHistoryListener.invoke(orderedHistoryHeader.userOrderId)
@@ -80,12 +83,13 @@ class OrderHistoryHeaderItemViewModel(
     }
 
     class Factory @Inject constructor(private val orderHistoryDatabase: OrderHistoryDatabase,
+                                      private val orderDetailRoomDatabase: OrderDetailRoomDatabase,
                                       private val eventBus: UnboundViewEventBus
     ) {
         fun newInstance(orderedHistoryHeader: OrderedHistoryHeader,
             refreshOrderHistoryListener: (userId: String) -> Unit): OrderHistoryHeaderItemViewModel {
             return OrderHistoryHeaderItemViewModel(orderedHistoryHeader, orderHistoryDatabase, eventBus,
-                refreshOrderHistoryListener)
+               orderDetailRoomDatabase, refreshOrderHistoryListener)
         }
     }
 }

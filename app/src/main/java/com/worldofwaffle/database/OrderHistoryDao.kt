@@ -1,16 +1,16 @@
 package com.worldofwaffle.database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
+import com.worldofwaffle.OrderedHistoryDetail
+import com.worldofwaffle.OrderedHistoryHeader
 
 @Dao
 interface OrderHistoryDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addOrderHistoryDetail(orderHistoryDetail: OrderHistoryEntity)
 
-    @Query("SELECT * FROM ORDER_HISTORY_TABLE WHERE deliveredStatus =:status")
+    @Query("SELECT * FROM ORDER_HISTORY_TABLE WHERE deliveredStatus =:status ORDER BY timeOfOrder DESC")
     fun getDeliveredOrderHistory(status: Int): List<OrderHistoryEntity>
 
     @Query("SELECT * FROM ORDER_HISTORY_TABLE WHERE userId=:userId")
@@ -24,6 +24,9 @@ interface OrderHistoryDao {
 
     @Query("SELECT * FROM ORDER_HISTORY_TABLE WHERE dateOfOrder= :date")
     fun getOrderHistory(date: String): List<OrderHistoryEntity>
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    fun updateEditedOrderHistory(orderHistoryDetail: OrderHistoryEntity)
 
     @Query("SELECT * FROM ORDER_HISTORY_TABLE WHERE dateOfOrder= :date")
     fun isOrderExist(date: String): Boolean

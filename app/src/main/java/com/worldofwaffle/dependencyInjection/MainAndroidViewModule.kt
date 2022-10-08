@@ -28,4 +28,7 @@ abstract class MainAndroidViewModule {
 
     @ContributesAndroidInjector
     abstract fun bindWaffleFillingsActivity(): WaffleFillingsActivity
+
+    @ContributesAndroidInjector
+    abstract fun bindOrderEditActivity(): OrderEditActivity
 }

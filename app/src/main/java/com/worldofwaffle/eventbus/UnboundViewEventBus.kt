@@ -1,6 +1,7 @@
 package com.worldofwaffle.eventbus
 
 import android.util.Log
+import com.worldofwaffle.FinishActivityEvent
 import com.worldofwaffle.commondialog.WaffleDialogEvent
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
@@ -11,6 +12,7 @@ import javax.inject.Singleton
 class UnboundViewEventBus @Inject constructor(){
     private val startActivitySubject: PublishSubject<StartActivityEvent> = PublishSubject.create()
     private val waffleDialogSubject: PublishSubject<WaffleDialogEvent> = PublishSubject.create()
+    private val finishActivitySubject = PublishSubject.create<FinishActivityEvent>()
 
 
     fun send(event: StartActivityEvent) {
@@ -21,14 +23,25 @@ class UnboundViewEventBus @Inject constructor(){
         waffleDialogSubject.onNext(event)
     }
 
+    fun send(event: FinishActivityEvent) {
+        finishActivitySubject.onNext(event)
+    }
+
+    fun finishActivity(viewModelClass: Class<*>): Observable<FinishActivityEvent> {
+        return finishActivitySubject.filter { event: FinishActivityEvent ->
+            fromEmitter(event, viewModelClass)
+        }
+    }
+
+    fun finishActivity(viewModel: Any): Observable<FinishActivityEvent> {
+        return finishActivity(viewModel.javaClass)
+    }
+
     fun startActivity(viewModel: Any): Observable<StartActivityEvent> {
-        Log.e("Viewmodel ", viewModel.javaClass.simpleName)
         return startActivity(viewModel.javaClass)
     }
 
     fun startActivity(viewModelClass: Class<*>): Observable<StartActivityEvent> {
-        //Log.e("Viewmodel1 ", viewModelClass.simpleName)
-
         return startActivitySubject.filter { event: StartActivityEvent ->
             fromEmitter(event, viewModelClass) }
     }

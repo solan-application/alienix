@@ -1,6 +1,5 @@
 package com.worldofwaffle
 
-import androidx.databinding.ObservableInt
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.OnLifecycleEvent
 import com.worldofwaffle.database.OrderDetailRoomDatabase
@@ -12,7 +11,6 @@ class OrderDetailViewModel @Inject constructor(val menuAdapter: OrderDetailAdapt
                                                val waffleMenuDatabase: WaffleMenuDatabase,
                                                private val orderDetailItemViewModelFactory: OrderDetailItemViewModel.Factory): BaseLifecycleViewModel() {
 
-    val waffleTotalPrice = ObservableInt(0)
     private val comma = ", "
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
@@ -23,7 +21,8 @@ class OrderDetailViewModel @Inject constructor(val menuAdapter: OrderDetailAdapt
     }
 
     private fun waffleMenuItems(): List<OrderDetailItemViewModel> {
-        val orderDetailsList = orderDetailRoomDatabase.orderDetailDataModelDao().getAllOrderDetails()
+        val userOrderId = orderDetailRoomDatabase.userOrderIdDao().getUserOrderId().userOrderId
+        val orderDetailsList = orderDetailRoomDatabase.orderDetailDataModelDao().getAllOrderDetails(userOrderId)
 
         if (orderDetailsList.isNotEmpty()) {
            val waffleMenuItems = orderDetailsList.map {
@@ -36,7 +35,9 @@ class OrderDetailViewModel @Inject constructor(val menuAdapter: OrderDetailAdapt
                     waffleDetail.wafflePrice,
                     it.waffleCount,
                     it.hasTakeAway,
-                    addOnNames, refreshOrderDetailListener) }
+                    addOnNames,
+                    userOrderId,
+                    refreshOrderDetailListener) }
             return waffleMenuItems
         }
 
@@ -46,18 +47,4 @@ class OrderDetailViewModel @Inject constructor(val menuAdapter: OrderDetailAdapt
     private val refreshOrderDetailListener: () -> Unit = {
         setDescriptionItems()
     }
-
-    fun addedWaffleTotalPrice(itemPrice: Int) {
-        val totalWafflePrice = waffleTotalPrice.get()
-        val updatedWafflePrice = totalWafflePrice + itemPrice
-        waffleTotalPrice.set(updatedWafflePrice)
-    }
-
-    fun removedWaffleTotalPrice(itemPrice: Int) {
-        val totalWafflePrice = waffleTotalPrice.get()
-        val updatedWafflePrice = totalWafflePrice - itemPrice
-        waffleTotalPrice.set(updatedWafflePrice)
-    }
-
-
 }

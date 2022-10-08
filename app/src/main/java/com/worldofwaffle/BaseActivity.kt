@@ -63,6 +63,14 @@ abstract class BaseActivity: AppCompatActivity() {
         return viewCallbackEmitter.init(lifecycle)
     }
 
+    protected open fun finishActivity(event: FinishActivityEvent) {
+        if (event.isFinishAffinity()) {
+            finishAffinity()
+        } else {
+            finish()
+        }
+    }
+
     protected fun startActivity(event: StartActivityEvent) {
         val flags: Int = event.getIntentFlags()
         val hasExtras: Boolean = event.hasExtras()

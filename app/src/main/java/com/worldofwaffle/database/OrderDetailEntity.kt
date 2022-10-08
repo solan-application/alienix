@@ -8,13 +8,11 @@ import com.worldofwaffle.menu.AddOnItem
 @Entity(tableName = "ORDER_DETAIL_TABLE")
 @TypeConverters(AddOnItemConverter::class)
 data class OrderDetailEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 1,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val userOrderId: String,
     val waffleId: String,
     val orderId: String,
-    val waffleCount:Int,
-    val hasTakeAway: Int,
+    val waffleCount:Int = 1,
+    val hasTakeAway: Int = 0,
     val addedOnItemDetails: List<AddOnItem> = listOf()
-){
-    constructor(waffleId: String, orderId: String, addedOnItemDetails: List<AddOnItem>) : this(0, "0", waffleId, orderId,1, 0,  addedOnItemDetails)
-}
+)

@@ -41,4 +41,8 @@ class MenuFragment: BaseFragment() {
             add(eventBus.fordDialog(MenuItemViewModel::class.java).safeSubscribe{showWaffleDialog(it)})
         }
     }
+
+    fun onPageShow() {
+        viewModel.setDescriptionItems(requireActivity().supportFragmentManager)
+    }
 }
