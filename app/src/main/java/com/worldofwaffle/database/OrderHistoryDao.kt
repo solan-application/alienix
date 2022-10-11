@@ -7,7 +7,7 @@ import com.worldofwaffle.OrderedHistoryHeader
 @Dao
 interface OrderHistoryDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     fun addOrderHistoryDetail(orderHistoryDetail: OrderHistoryEntity)
 
     @Query("SELECT * FROM ORDER_HISTORY_TABLE WHERE deliveredStatus =:status ORDER BY timeOfOrder DESC")
@@ -25,8 +25,11 @@ interface OrderHistoryDao {
     @Query("SELECT * FROM ORDER_HISTORY_TABLE WHERE dateOfOrder= :date")
     fun getOrderHistory(date: String): List<OrderHistoryEntity>
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
+    @Update
     fun updateEditedOrderHistory(orderHistoryDetail: OrderHistoryEntity)
+
+    @Query("DELETE FROM ORDER_HISTORY_TABLE WHERE userId = :userOrderId")
+    fun deleteOrderHistory(userOrderId: String)
 
     @Query("SELECT * FROM ORDER_HISTORY_TABLE WHERE dateOfOrder= :date")
     fun isOrderExist(date: String): Boolean

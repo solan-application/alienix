@@ -9,7 +9,8 @@ import javax.inject.Inject
 class OrderDetailViewModel @Inject constructor(val menuAdapter: OrderDetailAdapter,
                                                val orderDetailRoomDatabase: OrderDetailRoomDatabase,
                                                val waffleMenuDatabase: WaffleMenuDatabase,
-                                               private val orderDetailItemViewModelFactory: OrderDetailItemViewModel.Factory): BaseLifecycleViewModel() {
+                                               private val orderDetailItemViewModelFactory: OrderDetailItemViewModel.Factory,
+private val userOrderIdUtil: UserOrderIdUtil): BaseLifecycleViewModel() {
 
     private val comma = ", "
 
@@ -21,7 +22,7 @@ class OrderDetailViewModel @Inject constructor(val menuAdapter: OrderDetailAdapt
     }
 
     private fun waffleMenuItems(): List<OrderDetailItemViewModel> {
-        val userOrderId = orderDetailRoomDatabase.userOrderIdDao().getUserOrderId().userOrderId
+        val userOrderId = userOrderIdUtil.getUserOrderId()
         val orderDetailsList = orderDetailRoomDatabase.orderDetailDataModelDao().getAllOrderDetails(userOrderId)
 
         if (orderDetailsList.isNotEmpty()) {

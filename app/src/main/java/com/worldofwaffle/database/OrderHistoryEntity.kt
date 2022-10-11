@@ -11,7 +11,7 @@ import java.util.*
 @Entity(tableName = "ORDER_HISTORY_TABLE")
 @TypeConverters(OrderHistoryDetailConverter::class, OrderHistoryHeaderConverter::class, OrderHistoryEditConverter::class)
 data class OrderHistoryEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 11123,
+    @PrimaryKey val id: String = UUID.randomUUID().toString(),
     val userId: String,
     val dateOfOrder: String,
     val timeOfOrder: String,

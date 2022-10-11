@@ -9,7 +9,8 @@ import javax.inject.Inject
 
 class OrderEditViewModel @Inject constructor(private val orderDetailRoomDatabase: OrderDetailRoomDatabase,
                                              private val transientDataProvider: TransientDataProvider,
-                                             private val eventBus: UnboundViewEventBus) : BaseLifecycleViewModel() {
+                                             private val eventBus: UnboundViewEventBus,
+private val userOrderIdUtil: UserOrderIdUtil) : BaseLifecycleViewModel() {
 
     private lateinit var adapter: DashboardFragmentPagerAdapter
     private var screens = listOf<Fragment>()
@@ -27,14 +28,15 @@ class OrderEditViewModel @Inject constructor(private val orderDetailRoomDatabase
     private fun setScreens() = listOf( MenuFragment(), OrderDetailFragment())
 
     fun onClickReConfirmOrder() {
-        val existingUserOrderId = orderDetailRoomDatabase.userOrderIdDao().getUserOrderId().userOrderId
+        val existingUserOrderId = userOrderIdUtil.getUserOrderId()
         val orderDetailList = orderDetailRoomDatabase.orderDetailDataModelDao().getAllOrderDetails(existingUserOrderId)
         transientDataProvider.save(OrderEditStatusUseCase(true, orderDetailList))
         eventBus.send(FinishActivityEvent.build(this).finishActivityEvent())
     }
 
     fun onClickCancelOrder() {
-
+        transientDataProvider.save(OrderEditStatusUseCase(true, listOf()))
+        eventBus.send(FinishActivityEvent.build(this).finishActivityEvent())
     }
 
     fun onPageChange(position: Int) {

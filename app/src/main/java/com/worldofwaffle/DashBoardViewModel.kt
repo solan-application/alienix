@@ -2,6 +2,7 @@ package com.worldofwaffle
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
@@ -16,13 +17,15 @@ import java.util.*
 import javax.inject.Inject
 
 
-class DashBoardViewModel @Inject constructor(private val orderDetailRoomDatabase: OrderDetailRoomDatabase,
-                                             private val orderHistoryDatabase: OrderHistoryDatabase,
-                                             private val fillingsDatabase: WaffleFillingsDatabase,
-                                             private val homeDatabase: HomeDatabase,
-                                             private val transientDataProvider: TransientDataProvider,
-                                             private val eventBus: UnboundViewEventBus,
-                                             val menuAdapter: MenuAdapter)
+class DashBoardViewModel @Inject constructor(
+    private val orderDetailRoomDatabase: OrderDetailRoomDatabase,
+    private val orderHistoryDatabase: OrderHistoryDatabase,
+    private val fillingsDatabase: WaffleFillingsDatabase,
+    private val homeDatabase: HomeDatabase,
+    private val transientDataProvider: TransientDataProvider,
+    private val eventBus: UnboundViewEventBus,
+    val menuAdapter: MenuAdapter,
+    val userOrderIdUtil: UserOrderIdUtil)
     : BaseLifecycleViewModel() {
 
     private lateinit var adapter: DashboardFragmentPagerAdapter
@@ -34,21 +37,19 @@ class DashBoardViewModel @Inject constructor(private val orderDetailRoomDatabase
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun onCreate() {
-        val userOrderId = UUID.randomUUID().toString()
-        if (!orderDetailRoomDatabase.userOrderIdDao().isUserOrderIdExist()) {
-            orderDetailRoomDatabase.userOrderIdDao().addUserOrderId(UserOrderIdEntity(userOrderId = userOrderId))
+        if (!userOrderIdUtil.isUserOrderIdExist()) {
+            userOrderIdUtil.createUserOrderId()
         }else {
-            orderDetailRoomDatabase.userOrderIdDao().updateUserOrderId(userOrderId)
+            userOrderIdUtil.updateUserOrderId()
         }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     fun onResume() {
-        if (transientDataProvider.containsUseCase(OrderHistoryBackUseCase::class.java)) {
+       /* if (transientDataProvider.containsUseCase(OrderHistoryBackUseCase::class.java)) {
             transientDataProvider.remove(OrderHistoryBackUseCase::class.java)
-            val userOrderId = UUID.randomUUID().toString()
-            orderDetailRoomDatabase.userOrderIdDao().updateUserOrderId(userOrderId)
-        }
+            userOrderIdUtil.updateUserOrderId()
+        }*/
     }
 
 
@@ -73,10 +74,9 @@ class DashBoardViewModel @Inject constructor(private val orderDetailRoomDatabase
     fun getAdapter(): DashboardFragmentPagerAdapter = adapter
 
     fun onCancelOrder() {
-        val existingUserOrderId = orderDetailRoomDatabase.userOrderIdDao().getUserOrderId().userOrderId
+        val existingUserOrderId = userOrderIdUtil.getUserOrderId()
         orderDetailRoomDatabase.orderDetailDataModelDao().deleteAllOrderDetail(existingUserOrderId)
-        val userOrderId = UUID.randomUUID().toString()
-        orderDetailRoomDatabase.userOrderIdDao().updateUserOrderId(userOrderId)
+        userOrderIdUtil.updateUserOrderId()
     }
 
     fun onClickHome() {
@@ -146,10 +146,10 @@ class DashBoardViewModel @Inject constructor(private val orderDetailRoomDatabase
 
 
     fun onNext() {
-        val existingUserOrderId = orderDetailRoomDatabase.userOrderIdDao().getUserOrderId().userOrderId
+        val existingUserOrderId = userOrderIdUtil.getUserOrderId()
+        Log.e("userID", "confirm order $existingUserOrderId")
         if (orderDetailRoomDatabase.orderDetailDataModelDao().getAllOrderDetails(existingUserOrderId).isNotEmpty()) {
-            val userOrderId = UUID.randomUUID().toString()
-            orderDetailRoomDatabase.userOrderIdDao().updateUserOrderId(userOrderId)
+            userOrderIdUtil.updateUserOrderId()
             val orderDetailList =
                 orderDetailRoomDatabase.orderDetailDataModelDao().getAllOrderDetails(existingUserOrderId)
             transientDataProvider.save(OrderDetailUseCase(orderDetailList))

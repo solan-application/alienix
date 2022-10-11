@@ -1,12 +1,10 @@
 package com.worldofwaffle.menu.viewmodel
 
+import android.util.Log
 import androidx.core.util.Pair
 import androidx.databinding.ObservableBoolean
 import androidx.fragment.app.FragmentManager
-import com.worldofwaffle.R
-import com.worldofwaffle.RepeatOrderFragment
-import com.worldofwaffle.RepeatOrderUseCase
-import com.worldofwaffle.TransientDataProvider
+import com.worldofwaffle.*
 import com.worldofwaffle.commondialog.BaseWaffleMultipleSelectionItemViewModel
 import com.worldofwaffle.commondialog.DialogButtonTypes.PRIMARY
 import com.worldofwaffle.commondialog.DialogButtonTypes.SECONDARY
@@ -28,6 +26,7 @@ class MenuItemViewModel(
     private val orderDetailRoomDatabase: OrderDetailRoomDatabase,
     private val fragmentManager: FragmentManager,
     private val transientDataProvider: TransientDataProvider,
+    private val userOrderIdUtil: UserOrderIdUtil,
     private val addOnsDatabase: AddOnsDatabase,
     val waffleId: String,
     val waffleName: String,
@@ -46,7 +45,8 @@ class MenuItemViewModel(
         addOnItemList = addOnsDatabase.addOnDao().getAllAddOns().map {
                 AddOnItem(it.addOnId, it.addOnName, it.addOnPrice)
         }
-        userOrderId = orderDetailRoomDatabase.userOrderIdDao().getUserOrderId().userOrderId
+        userOrderId = userOrderIdUtil.getUserOrderId()
+        Log.e("userID", "Menu item $userOrderId")
         isOrderExist()
     }
 
@@ -94,6 +94,8 @@ class MenuItemViewModel(
         }
 
         override fun onMultipleSelection(multipleSelections: List<BaseWaffleMultipleSelectionItemViewModel>) {
+            Log.e("userID", "Menu item added $userOrderId")
+
             val addOnItems = (multipleSelections as List<AddOnItem>)
                 .filter { it.isChecked.get() }
                 .map { AddOnItem(it.addOnId, it.addOnName, it.addOnPrice) }
@@ -111,7 +113,8 @@ class MenuItemViewModel(
         private val eventBus: UnboundViewEventBus,
         private val orderDetailRoomDatabase: OrderDetailRoomDatabase,
         private val addOnsDatabase: AddOnsDatabase,
-        private val transientDataProvider: TransientDataProvider
+        private val transientDataProvider: TransientDataProvider,
+        private val userOrderIdUtil: UserOrderIdUtil
     ) {
         fun newInstance(
             waffleMenuEntity: WaffleMenuEntity,
@@ -121,6 +124,7 @@ class MenuItemViewModel(
                 orderDetailRoomDatabase,
                 fragmentManager,
                 transientDataProvider,
+                userOrderIdUtil,
                 addOnsDatabase,
                 waffleMenuEntity.waffleId,
                 waffleMenuEntity.waffleName,

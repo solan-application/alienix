@@ -76,8 +76,7 @@ class OrderHistoryHeaderItemViewModel(
             paymentModeDialog()
         }else {
             orderDetailRoomDatabase.orderDetailDataModelDao().deleteAllOrderDetail(orderedHistoryHeader.userOrderId)
-            orderHistoryDatabase.orderStateDao()
-                .updateDeliveredOrderStatus(1, orderedHistoryHeader.userOrderId)
+            orderHistoryDatabase.orderStateDao().updateDeliveredOrderStatus(1, orderedHistoryHeader.userOrderId)
             refreshOrderHistoryListener.invoke(orderedHistoryHeader.userOrderId)
         }
     }
